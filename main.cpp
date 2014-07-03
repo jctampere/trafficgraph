@@ -14,19 +14,22 @@
 #include <string>
 
 using namespace std;
-class stopvertex {
+/* Define stopvertext class
+ *
+ */
+class Stopvertex {
       private: 
-         string stop_id;
+         int stop_id;
          string stop_name;
          double stop_lat, stop_lon;
       public: 
-      stopvertex(string id, string name, double lat, double lon){
+      Stopvertex(int id, string name, double lat, double lon){
              stop_id = id;
              stop_name = name;
              stop_lat = lat;
              stop_lon = lon;
               }
-          string getStopID(){
+          int getStopID(){
              return stop_id;
               }
           string getStopName(){
@@ -39,22 +42,49 @@ class stopvertex {
               return stop_lon;
               }
 };
+/* Define edge class
+ *
+ */
+//class 
+/*Read Stops.txt file and put the stops information into vector
+ * 
+ */
+vector <Stopvertex> getStops();
+
+/*get edges from GTFS files (ongoing)
+ * 
+ */
+//vector <Edge> getEdges();
+
+int main(int argc, char** argv) {
+    vector <Stopvertex> stops;
+    stops = getStops();
+
+    //print stops 
+    vector<Stopvertex>::iterator i;
+    cout << "stops are: "<< endl;
+    for (vector<Stopvertex>::iterator i = stops.begin(); i!=stops.end(); ++i){
+       
+        cout << (*i).getStopID() << ","<<(*i).getStopName()<<","<<(*i).getStoplat()<<","<<(*i).getStoplon()<< endl;
+    }
+    return 0;
+}
 
 /*Read Stops.txt file and put the stops information into vector
  * 
  */
-int main(int argc, char** argv) {
-    std::vector <stopvertex> stops;
-    std::ifstream file;
+vector <Stopvertex> getStops(){
+    vector <Stopvertex> stopsfromfile;
+    ifstream file;
     file.open("stops1.txt");
     
-    string id;
+    int id;
     //string code;
     string name;
     double lat;
     double lon;
     
-    std::string line;
+    string line;
 
     if (!file){
      cerr << "Failed to open file" << endl;
@@ -62,10 +92,10 @@ int main(int argc, char** argv) {
      }
     while ( getline(file,line))
     {
-        std::stringstream lineStream(line);
-        std::string value;
-        std::getline(lineStream, value, ','); 
-        id = value;              
+        stringstream lineStream(line);
+        string value;
+        getline(lineStream, value, ','); 
+        id =atof(value.c_str());              
         std::getline(lineStream, value, ','); 
         //code = value;  
         std::getline(lineStream, value, ','); 
@@ -76,18 +106,10 @@ int main(int argc, char** argv) {
         lon = atof(value.c_str());  
         cout.precision(15);
         // cout << id << ","<<name<<","<<lat<<","<<lon<< endl;
-        stops.push_back(stopvertex(id,name,lat,lon));
+        stopsfromfile.push_back(Stopvertex(id,name,lat,lon));
      } 
     file.close();
 
-    //print stops 
-    std::vector<stopvertex>::iterator i;
-    cout << "stops are: "<< endl;
-    for (std::vector<stopvertex>::iterator i = stops.begin(); i!=stops.end(); ++i){
-       
-        cout << (*i).getStopID() << ","<<(*i).getStopName()<<","<<(*i).getStoplat()<<","<<(*i).getStoplon()<< endl;
-    }
-    return 0;
+   
+    return stopsfromfile;
 }
-
-
